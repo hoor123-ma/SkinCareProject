@@ -1,0 +1,256 @@
+﻿@model SkinCareProject.Models.User
+
+@{
+    ViewBag.Title = "Register";
+    Layout = null; // عدم استخدام أي Layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Skincare" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <style>
+        /* نفس التنسيقات في صفحة تسجيل الدخول */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .signup-container {
+            background-color: #FDF8F6;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 92%;
+            max-width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+            .signup-container label {
+                display: block;
+                text-align: left;
+                margin: 8px 0 10px;
+                color: #555;
+                font-size: 15px;
+                font-weight: 500;
+            }
+
+            .signup-container input,
+            .signup-container button {
+                width: 100%;
+                padding: 14px 16px;
+                font-size: 15px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                margin-bottom: 18px;
+                transition: all 0.3s ease;
+            }
+
+            .signup-container input {
+                background-color: #fff;
+                border: 1px solid #ccc;
+            }
+
+                .signup-container input:focus {
+                    border-color: #BB8F8B;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(187, 143, 139, 0.2);
+                }
+
+            .signup-container button {
+                background-color: #BB8F8B;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                margin-top: 8px;
+            }
+
+                .signup-container button:hover {
+                    background-color: #a07a77;
+                    transform: translateY(-1px);
+                }
+
+        h2 {
+            color: #BB8F8B;
+            margin-bottom: 28px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        #error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin: -10px 0 12px;
+            text-align: left;
+            display: none;
+        }
+
+        .text-danger {
+            color: #e74c3c;
+            font-size: 13px;
+            margin: -10px 0 12px;
+            text-align: left;
+            display: block;
+        }
+
+        /* إخفاء زر إظهار كلمة المرور الافتراضي في المتصفح */
+        input::-ms-reveal,
+        input::-ms-clear,
+        input::-webkit-credentials-auto-fill-button,
+        input::-webkit-password-toggle-button,
+        input::-webkit-password-reveal-button {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            height: 0 !important;
+            width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+
+        @* رسالة نجاح التسجيل تظهر هنا *@
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert-success" style= " background-color: #d4edda;
+                                                border-color: #c3e6cb;
+                                                color: #155724;
+                                                padding: 10px 15px;
+                                                margin-bottom: 15px;
+                                                border-radius: 5px;
+                                                font-size: 14px;">
+                                                 @ViewBag.Message </div>
+        }
+
+        @using (Html.BeginForm("Register", "Home", FormMethod.Post, new { @class = "form-signup" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <label for="email">Email Address</label>
+            @Html.TextBoxFor(m => m.email, new
+            {
+                @type = "email",
+                @class = "form-control",
+                @id = "email",
+                required = "required",
+                placeholder = "Enter your email"
+            })
+            @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger" })
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                @Html.PasswordFor(m => m.password, new
+                {
+                    @class = "form-control",
+                    @id = "password",
+                    required = "required",
+                    placeholder = "Create your password"
+                })
+                <i class="bi bi-eye toggle-password" id="togglePasswordPassword" aria-label="Toggle password visibility" role="button"></i>
+            </div>
+            @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger" })
+
+            <label for="confirm-password">Confirm Password</label>
+            <div class="password-wrapper">
+                <input type="password"
+                       id="confirm-password"
+                       name="ConfirmPassword"
+                       class="form-control"
+                       required
+                       placeholder="Confirm your password" />
+                <i class="bi bi-eye toggle-password" id="togglePasswordConfirm" aria-label="Toggle confirm password visibility" role="button"></i>
+            </div>
+
+            <p id="error-message">Passwords do not match.</p>
+
+            <button type="submit">Create an Account</button>
+        }
+    </div>
+
+    <script>
+        // إظهار/إخفاء كلمة المرور
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function () {
+                const input = this.previousElementSibling;
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                this.classList.toggle('bi-eye');
+                this.classList.toggle('bi-eye-slash');
+            });
+        });
+
+        // التحقق من تطابق كلمات المرور في الوقت الحقيقي
+        const form = document.querySelector('.form-signup');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm-password');
+        const errorMsg = document.getElementById('error-message');
+
+        function validatePasswords() {
+            if (password.value && confirmPassword.value && password.value !== confirmPassword.value) {
+                errorMsg.style.display = 'block';
+                confirmPassword.style.borderColor = '#e74c3c';
+            } else {
+                errorMsg.style.display = 'none';
+                confirmPassword.style.borderColor = '#ccc';
+            }
+        }
+
+        password.addEventListener('input', validatePasswords);
+        confirmPassword.addEventListener('input', validatePasswords);
+
+        form.addEventListener('submit', function (e) {
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault();
+                errorMsg.style.display = 'block';
+                confirmPassword.style.borderColor = '#e74c3c';
+                confirmPassword.focus();
+            }
+        });
+    </script>
+</body>
+
+</html>
